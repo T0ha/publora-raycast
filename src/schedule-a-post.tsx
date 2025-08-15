@@ -1,10 +1,11 @@
-import { Form, ActionPanel, Action, showToast, getPreferenceValues } from "@raycast/api";
+import { Form, ActionPanel, Action, LaunchProps, showToast, getPreferenceValues } from "@raycast/api";
+import { useCachedState } from "@raycast/utils";
 import { useState, useEffect } from "react";
 
 import { Post, Platform } from "./types";
 import { fetchPlatforms, schedulePost } from "./api";
 
-export default function Command() {
+export default function Command(props: LaunchProps<{draftValues: Post}>) {
   function handleSubmit(post: Post) {
     console.log(post);
     schedulePost(api_key, post);
@@ -13,7 +14,7 @@ export default function Command() {
 
   const api_key = getPreferenceValues<{ api_key: string }>().api_key;
 
-  const [platforms, setPlatforms] = useState<Platform[]>([
+  const [allPlatforms, setAllPlatforms] = useCachedState<Platform[]>("platforms", [
     {
       platformId: "loading",
       username: "loading",
@@ -22,11 +23,16 @@ export default function Command() {
     },
   ]);
 
+  const { draftValues: draftPost } = props;
+  const [content, setContent] = useState<string>(draftPost?.content || "");
+  const [due, setDue] = useState<Date | null>(draftPost?.scheduledTime || null);
+  const [platforms, setPlatforms] = useState<string[]>(draftPost?.platforms || []);
+  
   useEffect(() => {
     const getPlatforms = async () => {
       try {
         const platforms = await fetchPlatforms(api_key);
-        setPlatforms(platforms);
+        setAllPlatforms(platforms);
       } catch (error) {
         console.error("Error fetching platforms:", error);
         showToast({ title: "Error", message: "Failed to fetch platforms" });
@@ -36,8 +42,13 @@ export default function Command() {
     getPlatforms();
   }, [api_key]);
 
+  const updateContent = (content: string) => {
+    setContent(content);
+  };
+
   return (
     <Form
+    enableDrafts
       actions={
         <ActionPanel>
           <Action.SubmitForm onSubmit={handleSubmit} />
@@ -46,9 +57,9 @@ export default function Command() {
     >
       <Form.Description text="Schedule a post in Publora" />
 
-      <Form.DatePicker id="scheduledTime" title="Schedule" type={Form.DatePicker.Type.DateTime} />
-      <Form.TagPicker id="platforms" title="Publish to">
-        {platforms.map((platform) => (
+      <Form.DatePicker id="scheduledTime" title="Schedule" type={Form.DatePicker.Type.DateTime} value={due} onChange={setDue} />
+      <Form.TagPicker id="platforms" title="Publish to" value={platforms} onChange={setPlatforms}>
+        {allPlatforms.map((platform) => (
           <Form.TagPicker.Item
             key={platform.platformId}
             value={platform.platformId}
@@ -58,7 +69,7 @@ export default function Command() {
         ))}
       </Form.TagPicker>
       <Form.Separator />
-      <Form.TextArea id="content" title="Post" placeholder="Your post here" />
+      <Form.TextArea id="content" title="Post" value={content} onChange={updateContent} />
     </Form>
   );
 }
