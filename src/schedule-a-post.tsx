@@ -49,9 +49,13 @@ export default function Command(props: LaunchProps<{draftValues: Post}>) {
   return (
     <Form
     enableDrafts
+    navigationTitle={`Total characters: ${content.length}`}
       actions={
         <ActionPanel>
-          <Action.SubmitForm onSubmit={handleSubmit} />
+          <Action.SubmitForm 
+          onSubmit={handleSubmit} 
+          title="Schedule Post"
+          />
         </ActionPanel>
       }
     >
