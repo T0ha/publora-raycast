@@ -3,13 +3,14 @@
   "name": "publora",
   "title": "Publora",
   "description": "Manage your social media with Publora",
-  "icon": "extension-icon.png",
+  "categories": ["Communication", "Web", "Fun"],
+  "icon": "publora_512x512.png",
   "author": "anton_shvein",
   "license": "MIT",
   "commands": [
     {
-      "name": "schedule-a-post",
-      "title": "Schedule a Post",
+      "name": "schedule-post",
+      "title": "Schedule Post",
       "description": "Create and shedule a post in Publora",
       "mode": "view"
     }

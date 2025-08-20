@@ -2,7 +2,7 @@ export interface Post {
   content: string;
   scheduledTime: Date;
   platforms: string[];
-};
+}
 
 export interface Platform {
   platformId: string;
@@ -10,4 +10,3 @@ export interface Platform {
   displayName: string;
   profileImageUrl: string;
 }
-

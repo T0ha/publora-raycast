@@ -1,9 +1,9 @@
-import { Platform, Post } from './types';
+import { Platform, Post } from "./types";
 
 export const fetchPlatforms = async (api_key: string): Promise<Platform[]> => {
   const response = await fetch<Platform[]>("https://api.publora.com/api/v1/platform-connections", {
     headers: {
-      'x-publora-key': `${api_key}`,
+      "x-publora-key": `${api_key}`,
     },
   });
 
@@ -14,12 +14,11 @@ export const fetchPlatforms = async (api_key: string): Promise<Platform[]> => {
 
 export const schedulePost = async (api_key: string, post: Post) => {
   const body = JSON.stringify(post);
-  console.log("Scheduling post with body:", body);
   const response = await fetch("https://api.publora.com/api/v1/create-post", {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'x-publora-key': `${api_key}`,
+      "Content-Type": "application/json",
+      "x-publora-key": `${api_key}`,
     },
     body: body,
   });
@@ -30,4 +29,4 @@ export const schedulePost = async (api_key: string, post: Post) => {
   }
 
   return await response.json();
-}
+};
