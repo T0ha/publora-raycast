@@ -1,10 +1,9 @@
 import { Form, ActionPanel, Action, LaunchProps, ToastStyle, showToast, getPreferenceValues } from "@raycast/api";
 import { useCachedState, useForm, FormValidation } from "@raycast/utils";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 import { Post, Platform } from "./types";
 import { fetchPlatforms, schedulePost } from "./api";
-import { countReset, trace } from "console";
 
 export default function Command(props: LaunchProps<{ draftValues: Post }>) {
   const { draftValues: draftPost } = props;
@@ -21,7 +20,7 @@ export default function Command(props: LaunchProps<{ draftValues: Post }>) {
   ]);
 
   const { handleSubmit, itemProps, values } = useForm<Post>({
-    initialValues: draftPost || {content: ""},
+    initialValues: draftPost || { content: "" },
     async onSubmit(post: Post) {
       try {
         await schedulePost(api_key, post);
@@ -32,28 +31,39 @@ export default function Command(props: LaunchProps<{ draftValues: Post }>) {
         showToast({ title: "Error", message: "Failed to schedule post" });
       }
     },
-  validation: {
+    validation: {
       platforms: FormValidation.Required,
       content: (value) => {
         if (value.length === 0) {
           return "Content cannot be empty";
         }
-        if (value.length > 280 && values.platforms && values.platforms.findIndex((v) => v.startsWith("twitter")) != -1) {
+        if (
+          value.length > 280 &&
+          values.platforms &&
+          values.platforms.findIndex((v) => v.startsWith("twitter")) != -1
+        ) {
           showToast({ title: "Too long for X", message: "280 characters limit", style: ToastStyle.Failure });
         }
-        if (value.length > 300 && values.platforms && values.platforms.findIndex((v) => v.startsWith("bluesky")) != -1) {
+        if (
+          value.length > 300 &&
+          values.platforms &&
+          values.platforms.findIndex((v) => v.startsWith("bluesky")) != -1
+        ) {
           showToast({ title: "Too long for Bluesky", message: "300 characters limit", style: ToastStyle.Failure });
           return "Too long for Bluesky";
         }
-        if (value.length > 500 && values.platforms && values.platforms.findIndex((v) => v.startsWith("threads")) != -1) {
+        if (
+          value.length > 500 &&
+          values.platforms &&
+          values.platforms.findIndex((v) => v.startsWith("threads")) != -1
+        ) {
           showToast({ title: "Too long for Threads", message: "500 characters limit", style: ToastStyle.Failure });
-          return "Too long for Threads"
+          return "Too long for Threads";
         }
         return undefined;
-      }
+      },
     },
   });
-
 
   useEffect(() => {
     const getPlatforms = async () => {
