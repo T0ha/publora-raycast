@@ -47,7 +47,7 @@ export default function Command(props: LaunchProps<{ draftValues: Post }>) {
         }
         if (value.length > 500 && values.platforms && values.platforms.findIndex((v) => v.startsWith("threads")) != -1) {
           showToast({ title: "Too long for Threads", message: "500 characters limit", style: ToastStyle.Failure });
-          return "Too long for Threads";
+          return "Too long for Threads"
         }
         return undefined;
       }
@@ -62,7 +62,7 @@ export default function Command(props: LaunchProps<{ draftValues: Post }>) {
         setAllPlatforms(platforms);
       } catch (error) {
         console.error("Error fetching platforms:", error);
-        showToast({ title: "Error", message: "Failed to fetch platforms" });
+        showToast({ title: "Error", message: error, style: ToastStyle.Failure });
       }
     };
 
