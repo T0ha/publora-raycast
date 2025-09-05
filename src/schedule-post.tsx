@@ -56,7 +56,7 @@ export default function Command(props: LaunchProps<{ draftValues: Post }>) {
           value?.length &&
           value?.length > 500 &&
           values.platforms &&
-          values.platforms.findIndex((v) => v.startsWith("threads")) != 0
+          values.platforms.findIndex((v) => v.startsWith("threads")) != -1
         ) {
           showToast({ title: "Too long for Threads", message: "500 characters limit", style: Toast.Style.Failure });
           return "Too long for Threads";
@@ -86,7 +86,7 @@ export default function Command(props: LaunchProps<{ draftValues: Post }>) {
   }, []);
 
   // console.log(allPlatforms);
-  console.log(isLoading);
+  // console.log(isLoading);
 
   return (
     <Form

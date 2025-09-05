@@ -1,7 +1,7 @@
 export interface Post {
   content: string;
   scheduledTime: Date | null;
-  platforms: string[];
+  platforms: Platform["platformId"][];
 }
 
 export interface Platform {
